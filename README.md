@@ -39,6 +39,7 @@ pip install -r requirements.txt
 Download Flickr8k from [Kaggle](https://www.kaggle.com/datasets/adityajn105/flickr8k)
 and place the files as follows:
 
+```text
 data/
 ├── captions.txt
 ├── images/
@@ -48,6 +49,7 @@ data/
     ├── test_images.txt
     ├── train_captions.csv
     └── test_captions.csv
+```
 
 The splits/ files are already included in this repository
 
