@@ -28,6 +28,34 @@ perplexity, BLEU-1–4, and METEOR.
 | Dot-Product Attention | 15.21 | 0.1897 | 0.3989 |
 | Transformer | 15.27 | 0.1751 | 0.3842 |
 
+## Key Findings
+
+Additive attention improves generation quality. Show, Attend and Tell
+outperforms the CNN-LSTM baseline on both BLEU-4 (0.1939 vs. 0.1863)
+and METEOR (0.4021 vs. 0.3877), confirming that spatial attention over
+CNN feature maps helps the decoder focus on relevant image regions.
+
+The Transformer decoder does not dominate at this scale. Despite being
+the most expressive architecture, it scores lower than the attention-based
+LSTM on both BLEU-4 (0.1751) and METEOR (0.3842). On 8,000 images, the
+inductive biases of recurrent models compensate for the Transformer's
+greater capacity.
+
+GloVe embeddings offer no advantage here. Pretrained word vectors
+produced lower BLEU-4 and METEOR than random initialisation, suggesting
+the embedding layer adapts sufficiently during training on this vocabulary.
+
+Perplexity and BLEU/METEOR rankings diverge. Show and Tell achieves the
+lowest perplexity (14.71) but not the best generation quality, showing
+that perplexity alone is an incomplete proxy for captioning performance.
+
+## Attention Visualisation
+
+Spatial attention weights per generated word, using Show, Attend and Tell.
+Red regions indicate where the decoder focused while predicting each token.
+
+<img src="attention_example.png" alt="Attention visualisation" width="800">
+
 ## Setup
 
 ### 1. Install dependencies
