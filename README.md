@@ -34,3 +34,31 @@ perplexity, BLEU-1–4, and METEOR.
 
 ```bash
 pip install -r requirements.txt
+```
+### 2. Download the dataset
+Download Flickr8k from [Kaggle](https://www.kaggle.com/datasets/adityajn105/flickr8k)
+and place the files as follows:
+
+data/
+├── captions.txt
+├── images/
+│   └── *.jpg
+└── splits/
+    ├── train_images.txt
+    ├── test_images.txt
+    ├── train_captions.csv
+    └── test_captions.csv
+
+The splits/ files are already included in this repository
+
+### 3. Run the notebook
+jupyter lab captioning_flickr8k.ipynb
+
+Weights & Biases logging is optional. Set USE_WANDB = False in the first
+code cell to disable it.
+
+## Note on validation split
+Flickr8k's official validation set was used as a training proxy for early
+stopping and checkpointing. The reported test metrics therefore carry a slight
+optimistic bias. A methodologically cleaner setup would hold the validation
+set out entirely from checkpoint selection.
