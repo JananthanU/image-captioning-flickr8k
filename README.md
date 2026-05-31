@@ -54,7 +54,7 @@ that perplexity alone is an incomplete proxy for captioning performance.
 Spatial attention weights per generated word, using Show, Attend and Tell.
 Red regions indicate where the decoder focused while predicting each token.
 
-<img src="attention_example.png" alt="Attention visualisation" width="800">
+<img src="assets/attention_example.png" alt="Attention visualisation" width="800">
 
 ## Setup
 
