@@ -20,7 +20,7 @@ perplexity, BLEU-1–4, and METEOR.
 
 ## Results
 
-| Model | Perplexity ↓ | BLEU-4 ↑ | METEOR ↑ |
+| Model | Perplexity | BLEU-4 | METEOR |
 |---|---|---|---|
 | Show and Tell | **14.71** | 0.1863 | 0.3877 |
 | Show, Attend and Tell | 16.49 | **0.1939** | **0.4021** |
