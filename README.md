@@ -1,53 +1,63 @@
 # Image Captioning on Flickr8k
 
-Implementation and evaluation of five image captioning architectures on the
-[Flickr8k dataset](https://www.kaggle.com/datasets/adityajn105/flickr8k),
-progressing from a simple CNN-LSTM baseline to a Transformer decoder with
-cross-attention.
+Five image captioning architectures evaluated on a public benchmark, progressing
+from a CNN-LSTM baseline to a Transformer decoder with cross-attention.
 
-## Models
+> No single model wins on all metrics. **Show, Attend and Tell leads on all BLEU metrics**
+> (BLEU-4: 0.1915). **Dot-Product Attention leads on METEOR** (0.3961).
+> The Transformer does not dominate despite being the most expressive architecture.
+
+---
+
+## Results
+
+All models evaluated with greedy decoding and beam search (k=5).
+
+| Model | Perplexity | BLEU-1 | BLEU-4 | METEOR |
+|---|---|---|---|---|
+| Show and Tell | **14.71** | 0.5952 | 0.1863 | 0.3877 |
+| Show, Attend and Tell | 16.49 | **0.6206** | **0.1915** | 0.3767 |
+| GloVe Init | 15.24 | 0.5761 | 0.1768 | 0.3897 |
+| Dot-Product Attention | 15.21 | 0.6018 | 0.1902 | **0.3961** |
+| Transformer | 15.27 | 0.5735 | 0.1800 | 0.3877 |
+
+---
+
+## Approach
 
 | Model | Description |
 |---|---|
 | **Show and Tell** | ResNet-18 encoder + LSTM decoder, transfer learning |
 | **Show, Attend and Tell** | Additive (Bahdanau) spatial attention over CNN feature maps |
 | **Dot-Product Attention** | Scaled dot-product attention as alternative to additive |
-| **GloVe Embeddings** | Pretrained word vectors vs. random initialization |
+| **GloVe Embeddings** | Pretrained word vectors vs. random initialisation |
 | **Transformer Decoder** | Cross-attention to spatial image features |
 
-All models are evaluated with greedy decoding and beam search (k=5) using
-perplexity, BLEU-1–4, and METEOR.
-
-## Results
-
-| Model | Perplexity | BLEU-4 | METEOR |
-|---|---|---|---|
-| Show and Tell | **14.71** | 0.1863 | 0.3877 |
-| Show, Attend and Tell | 16.49 | **0.1939** | **0.4021** |
-| GloVe Init | 15.24 | 0.1712 | 0.3801 |
-| Dot-Product Attention | 15.21 | 0.1897 | 0.3989 |
-| Transformer | 15.27 | 0.1751 | 0.3842 |
+---
 
 ## Key Findings
 
-Additive attention improves generation quality. Show, Attend and Tell
-outperforms the CNN-LSTM baseline on both BLEU-4 (0.1939 vs. 0.1863)
-and METEOR (0.4021 vs. 0.3877), confirming that spatial attention over
-CNN feature maps helps the decoder focus on relevant image regions.
+Attention consistently improves BLEU quality. Show, Attend and Tell leads on
+all four BLEU metrics, with BLEU-4 rising from 0.1863 (baseline) to 0.1915.
+Dot-Product Attention achieves the best METEOR (0.3961), showing that the
+two attention variants capture different aspects of caption quality.
 
-The Transformer decoder does not dominate at this scale. Despite being
-the most expressive architecture, it scores lower than the attention-based
-LSTM on both BLEU-4 (0.1751) and METEOR (0.3842). On 8,000 images, the
-inductive biases of recurrent models compensate for the Transformer's
-greater capacity.
+The Transformer decoder does not dominate at this scale. Despite being the
+most expressive architecture, it scores lower than both attention-based LSTMs
+on BLEU-4 (0.1800) and METEOR (0.3877). On 8,000 images, the inductive
+biases of recurrent models compensate for the Transformer's greater capacity.
 
-GloVe embeddings offer no advantage here. Pretrained word vectors
-produced lower BLEU-4 and METEOR than random initialisation, suggesting
-the embedding layer adapts sufficiently during training on this vocabulary.
+GloVe embeddings offer no consistent advantage. Pretrained word vectors
+produced lower BLEU scores than random initialisation across all models,
+suggesting the embedding layer adapts sufficiently during training on this
+vocabulary size.
 
 Perplexity and BLEU/METEOR rankings diverge. Show and Tell achieves the
-lowest perplexity (14.71) but not the best generation quality, showing
-that perplexity alone is an incomplete proxy for captioning performance.
+lowest perplexity (14.71) but is outperformed on every generation quality
+metric. This confirms that perplexity alone is an incomplete proxy for
+captioning performance.
+
+---
 
 ## Attention Visualisation
 
@@ -56,38 +66,16 @@ Red regions indicate where the decoder focused while predicting each token.
 
 <img src="assets/attention_example.png" alt="Attention visualisation" width="800">
 
-## Setup
+---
 
-### 1. Install dependencies
+## Reproducibility
 
-```bash
-pip install -r requirements.txt
-```
-### 2. Download the dataset
-Download Flickr8k from [Kaggle](https://www.kaggle.com/datasets/adityajn105/flickr8k)
-and place the files as follows:
+Dataset: [Flickr8k on Kaggle](https://www.kaggle.com/datasets/adityajn105/flickr8k)  
 
-```text
-data/
-├── captions.txt
-├── images/
-│   └── *.jpg
-└── splits/
-    ├── train_images.txt
-    ├── test_images.txt
-    ├── train_captions.csv
-    └── test_captions.csv
-```
-
-The splits/ files are already included in this repository
-
-### 3. Run the notebook
-jupyter lab captioning_flickr8k.ipynb
-
-Weights & Biases logging is optional. Set USE_WANDB = False in the first
-code cell to disable it.
+---
 
 ## Note on validation split
+
 Flickr8k's official validation set was used as a training proxy for early
 stopping and checkpointing. The reported test metrics therefore carry a slight
 optimistic bias. A methodologically cleaner setup would hold the validation
